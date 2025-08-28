@@ -22,8 +22,16 @@ def clean_build_dirs():
     dirs_to_clean = ['build', 'dist', '__pycache__']
     for dir_name in dirs_to_clean:
         if os.path.exists(dir_name):
-            shutil.rmtree(dir_name)
-            print(f"🧹 Cleaned {dir_name} directory")
+            try:
+                shutil.rmtree(dir_name)
+                print(f"🧹 Cleaned {dir_name} directory")
+            except PermissionError:
+                print(f"⚠️ Could not clean {dir_name} (files may be in use)")
+                # Try to continue anyway
+                continue
+            except Exception as e:
+                print(f"⚠️ Error cleaning {dir_name}: {e}")
+                continue
 
 def create_spec_file():
     """Create PyInstaller spec file for GUI application"""
@@ -45,28 +53,67 @@ a = Analysis(
         'tkinter.messagebox',
         'tkinter.filedialog',
         'requests',
+        'requests.adapters',
+        'requests.packages',
+        'requests.packages.urllib3',
+        'requests.packages.urllib3.util',
+        'requests.packages.urllib3.util.retry',
         'selenium',
         'selenium.webdriver',
         'selenium.webdriver.chrome',
         'selenium.webdriver.chrome.service',
         'selenium.webdriver.chrome.options',
+        'selenium.webdriver.common',
         'selenium.webdriver.common.by',
+        'selenium.webdriver.common.keys',
+        'selenium.webdriver.support',
         'selenium.webdriver.support.ui',
         'selenium.webdriver.support.expected_conditions',
+        'selenium.webdriver.support.wait',
         'undetected_chromedriver',
+        'undetected_chromedriver.v2',
+        'undetected_chromedriver.patcher',
+        'undetected_chromedriver.options',
+        'undetected_chromedriver.webelement',
+        'beautifulsoup4',
+        'bs4',
+        'bs4.builder',
+        'bs4.builder.html',
+        'bs4.builder._html5lib',
+        'bs4.builder._lxml',
+        'flask',
+        'flask_cors',
         'smtplib',
         'email',
+        'email.mime',
         'email.mime.text',
         'email.mime.multipart',
+        'email.mime.base',
         'threading',
         'json',
         'logging',
+        'logging.handlers',
         'datetime',
         'time',
         'os',
         'sys',
         'subprocess',
         'webbrowser',
+        'pathlib',
+        'urllib',
+        'urllib.request',
+        'urllib.parse',
+        'urllib.error',
+        'http',
+        'http.client',
+        'ssl',
+        'socket',
+        'zipfile',
+        'tempfile',
+        'shutil',
+        'platform',
+        'psutil',
+        'websockets',
     ],
     hookspath=[],
     hooksconfig={},
@@ -111,22 +158,57 @@ def build_executable():
     """Build the executable using PyInstaller"""
     print("🔨 Building executable...")
     try:
-        # Use the spec file for more control
-        result = subprocess.run([
+        # Use more comprehensive PyInstaller command
+        cmd = [
             sys.executable, "-m", "PyInstaller",
             "--clean",
             "--noconfirm",
-            "gui_app.spec"
-        ], capture_output=True, text=True)
+            "--onefile",
+            "--windowed",
+            "--add-data", "default.json;.",
+            "--add-data", "config.example.json;.",
+            "--hidden-import", "undetected_chromedriver",
+            "--hidden-import", "undetected_chromedriver.v2",
+            "--hidden-import", "undetected_chromedriver.patcher",
+            "--hidden-import", "selenium.webdriver.chrome.service",
+            "--hidden-import", "selenium.webdriver.chrome.options",
+            "--hidden-import", "selenium.webdriver.common.by",
+            "--hidden-import", "selenium.webdriver.support.ui",
+            "--hidden-import", "selenium.webdriver.support.expected_conditions",
+            "--hidden-import", "requests",
+            "--hidden-import", "beautifulsoup4",
+            "--hidden-import", "bs4",
+            "--hidden-import", "flask",
+            "--hidden-import", "flask_cors",
+            "--hidden-import", "smtplib",
+            "--hidden-import", "email.mime.text",
+            "--hidden-import", "email.mime.multipart",
+            "--collect-all", "undetected_chromedriver",
+            "--collect-all", "selenium",
+            "--name", "UkrainePassportChecker",
+            "gui_app.py"
+        ]
+        
+        print("Running PyInstaller with command:")
+        print(" ".join(cmd))
+        
+        result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode == 0:
             print("✅ Executable built successfully!")
-            print(f"📂 Executable location: {os.path.abspath('dist/UkrainePassportChecker.exe')}")
-            return True
+            exe_path = os.path.join("dist", "UkrainePassportChecker.exe")
+            if os.path.exists(exe_path):
+                print(f"📂 Executable location: {os.path.abspath(exe_path)}")
+                return True
+            else:
+                print("❌ Executable file not found after build!")
+                return False
         else:
             print("❌ Build failed!")
-            print("STDOUT:", result.stdout)
-            print("STDERR:", result.stderr)
+            print("STDOUT:")
+            print(result.stdout)
+            print("\nSTDERR:")
+            print(result.stderr)
             return False
     except Exception as e:
         print(f"❌ Error building executable: {e}")

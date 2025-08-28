@@ -23,7 +23,7 @@ A Python application to monitor Ukrainian passport status with both GUI and API 
 
 1. **Download or clone this repository**
    ```bash
-   git clone https://github.com/yourusername/ukraine-passport-checker.git
+   git clone https://github.com/AlertX1978/ukraine-passport-checker.git
    cd ukraine-passport-checker
    ```
 

@@ -21,6 +21,10 @@ wheels/
 *.egg
 MANIFEST
 
+# PyInstaller
+*.spec
+*.exe.log
+
 # Virtual environments
 .venv/
 venv/

@@ -1,0 +1,26 @@
+{
+    "email": {
+        "sender": "your-email@gmail.com",
+        "recipient": "recipient@gmail.com",
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587,
+        "username": "your-email@gmail.com",
+        "password": "your-app-password"
+    },
+    "passport_code": "your-passport-code",
+    "check_interval_seconds": 1800,
+    "timeouts": {
+        "search_input_wait": 5,
+        "search_button_wait": 5,
+        "result_wait": 5
+    },
+    "translations": {
+        "Статус": "Status",
+        "Дата": "Date",
+        "Заявку подано": "Application submitted",
+        "Дані відправлено на перевірку": "Data sent for verification",
+        "Дані відправлено на персоналізацію": "Data sent for personalization",
+        "Документ готовий": "Document ready",
+        "Документ видано": "Document issued"
+    }
+}

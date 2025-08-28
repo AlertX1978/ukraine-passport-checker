@@ -19,7 +19,19 @@ A Python application to monitor Ukrainian passport status with both GUI and API 
 
 ## 🛠️ Installation
 
-### Method 1: Quick Start (Recommended)
+### Option 1: Download Executable (Easiest - No Python Required)
+
+**For Windows users who want to use immediately:**
+
+1. **Download the latest release:**
+   - Go to [Releases](https://github.com/AlertX1978/ukraine-passport-checker/releases/latest)
+   - Download `UkrainePassportChecker.exe` or the entire `dist` folder
+
+2. **Install and run:**
+   - **Easy install:** Run `install.bat` as Administrator (creates desktop shortcut)
+   - **Portable:** Just double-click `UkrainePassportChecker.exe`
+
+### Option 2: Python Installation (For Developers)
 
 1. **Download or clone this repository**
    ```bash
@@ -41,26 +53,24 @@ A Python application to monitor Ukrainian passport status with both GUI and API 
    - Configure email settings (sender, recipient, app password)
 
 4. **Run the application**
-   - **Windows**: Double-click `start_gui.bat`
-   - **Manual**: `python gui_app.py`
+   - **Windows:** Double-click `start_gui.bat`
+   - **Manual:** `python gui_app.py`
 
-### Method 2: Virtual Environment (Recommended for developers)
+### Option 3: Build Your Own Executable
 
 ```bash
-# Create virtual environment
-python -m venv .venv
+# Clone and setup
+git clone https://github.com/AlertX1978/ukraine-passport-checker.git
+cd ukraine-passport-checker
 
-# Activate virtual environment
-# Windows:
-.\.venv\Scripts\activate
-# Linux/Mac:
-source .venv/bin/activate
-
-# Install dependencies
+# Install dependencies including PyInstaller
 pip install -r requirements.txt
 
-# Run the application
-python gui_app.py
+# Build executable
+python build_exe.py
+# Or on Windows: build_executable.bat
+
+# Your executable will be in the dist/ folder
 ```
 
 ## ⚙️ Configuration
